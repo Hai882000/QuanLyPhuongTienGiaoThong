@@ -398,60 +398,72 @@ public class QuanLyPhieuPhat extends javax.swing.JPanel {
             boolean KTNV = false;
             boolean KTPT = false;
             boolean KTPP = false;
+            boolean checkPT = false;
             PhieuThueDao ptd = new PhieuThueDao();
             List<PhieuThue> lpt = ptd.findAll();
             for(PhieuThue pt : lpt){
                 if(pt.getMaPT().trim().equalsIgnoreCase(txtMaHD.getText().trim())){
                     KTPT = true;
                     if(pt.getMaNV().trim().equalsIgnoreCase(txtMaNV.getText().trim())){
-                        KTNV = true;
-                        if(pt.getMaKH().trim().equalsIgnoreCase(txtMaKH.getText().trim())){
-                            KTKH = true;
-                        }
+                        KTNV = true;  
+                    }
+                    if(pt.getMaKH().trim().equalsIgnoreCase(txtMaKH.getText().trim())){
+                        KTKH = true;
                     }
                 }
             }
             PhieuPhatDao dao = new PhieuPhatDao();
             List<PhieuPhat> lpp= dao.findAll();
             for(PhieuPhat pp : lpp){
-                if(pp.getMaPT().trim().equalsIgnoreCase(txtMaPhieuPhat.getText().trim())){
+                if(pp.getMaPP().trim().equalsIgnoreCase(txtMaPhieuPhat.getText().trim())){
                     KTPP = true;
+                    
+                }
+                if(pp.getMaPT().trim().equalsIgnoreCase(txtMaHD.getText().trim())){
+                    checkPT = true;
                 }
             }
-            if(KTPT == true){
-                if(KTNV == true ){
-                    if(KTKH == true){
-                        if(KTPP == false){
-                            PhieuPhat pp = new PhieuPhat();
-                            pp.setMaPP(txtMaPhieuPhat.getText().trim());
-                            pp.setNgayPhat(txtNgayLap.getText());
-                            pp.setMaPT(txtMaHD.getText());
-                            pp.setMaKH(txtMaKH.getText());
-                            pp.setMaNV(txtMaNV.getText());
-                            pp.setNoiDungPhat(txtNoiDung.getText());
-                            pp.setTienPhat(Float.parseFloat(txtTienPhat.getText()));
-                            
-                            if (dao.insert(pp)) {
-                                MessageDialogHelper.showMessageDialog(parentForm, "Phiếu phạt đã được tạo", "Thông báo");
-                                btnResetActionPerformed(evt);
-                                loadDataToTable();
-                            } else {
-                                MessageDialogHelper.showConfirmDialog(parentForm, "Phiếu phạt không được lưu do lỗi", "Cảnh báo");
-                            }
+            if(KTPP == false){
+                if(checkPT == false){
+                    if(KTPT == true){
+                        if(KTNV == true ){
+                            if(KTKH == true){
+
+                                PhieuPhat pp = new PhieuPhat();
+                                pp.setMaPP(txtMaPhieuPhat.getText().trim());
+                                pp.setNgayPhat(txtNgayLap.getText());
+                                pp.setMaPT(txtMaHD.getText());
+                                pp.setMaKH(txtMaKH.getText());
+                                pp.setMaNV(txtMaNV.getText());
+                                pp.setNoiDungPhat(txtNoiDung.getText());
+                                pp.setTienPhat(Float.parseFloat(txtTienPhat.getText()));
+
+                                if (dao.insert(pp)) {
+                                    MessageDialogHelper.showMessageDialog(parentForm, "Phiếu phạt đã được tạo", "Thông báo");
+                                    btnResetActionPerformed(evt);
+                                    loadDataToTable();
+                                } else {
+                                    MessageDialogHelper.showConfirmDialog(parentForm, "Phiếu phạt không được lưu do lỗi", "Cảnh báo");
+                                }
+
+                            }else{
+                                MessageDialogHelper.showMessageDialog(parentForm, "Vui lòng nhập đúng mã khách hàng trong phiếu thuê ", "Cảnh báo");
+                                return;
+                            }   
                         }else{
-                            MessageDialogHelper.showMessageDialog(parentForm, "Phiếu phạt này đã tồn tại", "Cảnh báo");
+                            MessageDialogHelper.showMessageDialog(parentForm, "Vui lòng nhập đúng mã nhân viên trong phiếu thuê", "Cảnh báo");
                             return;
                         }
                     }else{
-                        MessageDialogHelper.showMessageDialog(parentForm, "Vui lòng nhập đúng mã khách hàng trong phiếu thuê ", "Cảnh báo");
+                        MessageDialogHelper.showMessageDialog(parentForm, "Mã phiếu thuê không tồn tại", "Cảnh báo");
                         return;
-                    }   
+                    }
                 }else{
-                    MessageDialogHelper.showMessageDialog(parentForm, "Vui lòng nhập đúng mã nhân viên trong phiếu thuê", "Cảnh báo");
-                    return;
+                    MessageDialogHelper.showMessageDialog(parentForm, "Mã phiếu thuê đã tồn tại", "Cảnh báo");
+                        return;
                 }
             }else{
-                MessageDialogHelper.showMessageDialog(parentForm, "Mã phiếu thuê không tồn tại", "Cảnh báo");
+                MessageDialogHelper.showMessageDialog(parentForm, "Phiếu phạt này đã tồn tại", "Cảnh báo");
                 return;
             }
             
